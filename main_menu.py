@@ -1,46 +1,49 @@
-import getpass
-import uuid
-import hashlib
+import db_tool as db
+import pass_gen as ps
 
-def main_menu():
-    print("Witaj w Pass Menago")
-    what_to_do = input("\nCo chcesz zrobic? \n   "
-                       "* Chce zobaczyc moje hasła - wpisz 1 \n   "
-                       "* Chce dodac nowe hasło - wpisz 2 \n   "
-                       "* Jesli chcesz wyjść - wpisz 3 \n   "
-                       "* Jezeli potrzebujesz pomocy - wpisz help \n"
-                       "\n Co wybierasz: ")
-    if what_to_do == '1':
-        see_pass()
-    elif what_to_do == '2':
-        add_pass()
-    elif what_to_do == '3':
-        print ("Do zobaczenia")
+
+def welcome():
+    ps.clear()
+    print('|====================================================|')
+    print('|                                                    |')
+    print('|              Welcome in Pass Menago                |')
+    print('|                                                    |')
+    print('|====================================================|')
+
+
+def main():
+    main_actiity = input("\nWhat you want to do?         \n"
+                         "\n  Create account - 1 \n"
+                         "  Use yours data - 2 \n"
+                         "  Generate password - 3 \n"
+                         "  Need help ? - 4 \n"
+                         "  Zero to quit - 0 \n"
+                         "\n"
+                         ">>> ")
+    if main_actiity == '1':
+        print('Insert you date')
+        db.create_user()
+#        welcome()
+        main()
+    elif main_actiity == '2':
+        print('Yours data')
+        main()
+    elif main_actiity == '3':
+        ps.generator_menu()
+        main()
+    elif main_actiity == '4':
+        print ('Sam se napisz manual')
+        welcome()
+        main()
+    elif main_actiity == '0':
+        print ('Nara frajerze')
         exit()
-    elif what_to_do == 'help':
-        help_page()
+    elif main_actiity == '':
+        print ('Nara frajerze')
     else:
-        main_menu
+        welcome()
+        main()
 
+welcome()
+main()
 
-def hash_password(passwd):
-    # uuid is used to generate a random number
-    salt = uuid.uuid4().hex
-    return hashlib.sha256(salt.encode() + passwd.encode()).hexdigest() + ':' + salt
-
-
-def check_password(hashed_password, user_password):
-    password, salt = hashed_password.split(':')
-    return password == hashlib.sha256(salt.encode() + user_password.encode()).hexdigest()
-
-
-def login_panel():
-    name = input("Podaj zwojego uzytkownika: ")
-    passwd = getpass.getpass(prompt="Podaj haslo: ")
-    passwd_2 = getpass.getpass(prompt="Podaj haslo: ")
-    hashed_password = hash_password(passwd)
-    hashed_password_2 = hash_password(passwd_2)
-    if check_password(hashed_password, hashed_password_2):
-        print('You entered the right password')
-    else:
-        print('I am sorry but the password does not match')

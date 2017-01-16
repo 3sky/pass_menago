@@ -3,48 +3,49 @@ import random
 import string
 
 
-def main():
-     main_actiity = input("\nWhat strong password do you need \n"
-                         "\n  * Weak \n"
-                         "  * Strong \n"
-                         "  * Unix like\n"
-                         "  Press exit for exit \n"
-                         "What do you need(weak/strong/unix)? ")
-     main_actiity.lower()
-     if main_actiity == 'weak':
-         weak_gen()
-         main()
-     elif main_actiity == 'strong':
-         clear()
-         [strong_gen() for _ in range(8)]
-         main()
-     elif main_actiity == 'unix':
-         clear()
-         [unix_pass_gen() for _ in range(8)]
-         main()
-     elif main_actiity == 'exit':
-         print("\nTo next time man")
-         exit()
-     else:
-         main()
+def generator_menu():
+    clear()
+    main_actiity = (int(input("\nWhat strong password do you need \n"
+                              "\n  # Weak - 1 \n"
+                              "  # Strong - 2\n"
+                              "  # Unix like - 3 \n"
+                              "  # Zero to quit - 0 \n"
+                              ">>> ")))
+    if main_actiity == 1:
+        weak_gen()
+    elif main_actiity == 2:
+        clear()
+        [strong_gen() for _ in range(8)]
+    elif main_actiity == 3:
+        clear()
+        [unix_pass_gen() for _ in range(8)]
+    elif main_actiity == 0:
+        clear()
+    else:
+        generator_menu()
 
 
 def weak_gen():
-    weak_req = input("Do you really need gen weak password(yes/no): ")
-    if weak_req == "yes":
+    global pwlist
+    pwlist = []
+    weak_req = input("Do you really need gen weak password(Y/n): ")
+    weak_req.lower()
+    if weak_req == "y":
         clear()
         for _ in range(8):
             gen_pass(5)
             random.shuffle(pwlist)
             pwstring = "".join(pwlist)
-            print(pwstring)
-    elif weak_req == "no":
-        main()
+            print (pwstring)
+    elif weak_req == "n":
+        generator_menu()
     else:
         weak_gen()
 
 
 def strong_gen():
+    global pwlist
+    pwlist = []
     gen_pass(8)
     random.shuffle(pwlist)
     pwstring = "".join(pwlist)
@@ -76,8 +77,3 @@ def gen_random(string_type):
 
 def clear():
     os.system('cls')
-
-
-clear()
-pwlist = []
-main()
