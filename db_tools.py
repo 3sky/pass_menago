@@ -4,14 +4,14 @@ import hashlib
 import getpass
 
 
-def select_password(user_name, function):
+def show_data(user_name, function):
     conn = sqlite3.connect('test.db')
     cursor = conn.cursor()
     cursor.execute("SELECT PASSWORD FROM APP_DB WHERE USER = '%s' and FUNCTION = '%s'"
-                   % (user_name, function))
+            % (user_name, function))
     query_output = str(cursor.fetchone())
-    user_name = ''.join(filter(str.isalpha, query_output))
-    return (user_name)
+    password = re.sub('[^A-Za-z0-9]+', '', query_output)
+    return (password)
     conn.close()
 
 
@@ -19,7 +19,7 @@ def select_user(user_name):
     conn = sqlite3.connect('test.db')
     cursor = conn.cursor()
     cursor.execute("SELECT MASTER_PASS FROM SEC WHERE USER = '%s'"
-                   % (user_name))
+            % (user_name))
     query_output = str(cursor.fetchone())
     password = re.sub('[^A-Za-z0-9]+', '', query_output)
     return (password)
@@ -79,38 +79,32 @@ def check_pass(user_name, user_input):
     db_pass = re.sub('[^A-Za-z0-9]+', '', query_output)
     conn.close()
     user_hash = hashlib.sha512(user_input.encode())
-    print(db_pass)
-    print(user_hash.hexdigest())
     if user_hash.hexdigest() == db_pass:
         return True
 
 
 def create_user():
-    #     init_table()
+    init_table()
     name = input("Insert yours username: \n"
-                 "Q to exit \n "
                  ">>> ")
     user_name = name.lower()
-    if user_name == 'q':
+    if user_name == 'exit()':
         print("")
     elif (select_user(user_name)) == 'None':
         user_password = getpass.getpass(prompt='Insert yours master password: ')
-        insert_user(user_name, user_password)
+        hash_passwd = hashlib.sha512(user_password.encode())
+        insert_user(user_name, hash_passwd.hexdigest())
     else:
         print('This user already exists')
         create_user()
 
 
-# user input question
-#     hash pass
-#     insert_user(user, password)
+def del_data(user_func):
+    conn = sqlite3.connect('test.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM APP_DB WHERE function='%s'" % (user_func))
+    conn.commit()
+    conn.close()
 
-create_user()
 
-# if check_pass('ADAM', 'Superjaja'):
-#     print('Hura dziala')
 
-# print (select_password('Greg', 'DB'))
-# insert_row('Jim','ZXCVASDF','OS')
-# update_password('Eva','OS','Nowe_haslo4')
-# init_table()
