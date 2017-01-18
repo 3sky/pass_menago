@@ -4,30 +4,29 @@ import string
 
 
 def generator_menu():
+    pwlist = []
+    global pwlist
     clear()
-    main_actiity = (int(input("\nWhat strong password do you need \n"
-                              "\n  # Weak - 1 \n"
-                              "  # Strong - 2\n"
-                              "  # Unix like - 3 \n"
-                              "  # Zero to quit - 0 \n"
-                              ">>> ")))
-    if main_actiity == 1:
+    main_actiity = (input("\nWhat strong password do you need \n"
+                          "\n  # Weak - 1 \n"
+                          " # Strong - 2\n"
+                          "  # Unix like - 3 \n"
+                          ">>> "))
+    if main_actiity == '1':
         weak_gen()
-    elif main_actiity == 2:
+    elif main_actiity == '2':
         clear()
         [strong_gen() for _ in range(8)]
-    elif main_actiity == 3:
+    elif main_actiity == '3':
         clear()
         [unix_pass_gen() for _ in range(8)]
-    elif main_actiity == 0:
+    elif main_actiity == '.back':
         clear()
     else:
         generator_menu()
 
 
 def weak_gen():
-    global pwlist
-    pwlist = []
     weak_req = input("Do you really need gen weak password(Y/n): ")
     weak_req.lower()
     if weak_req == "y":
@@ -44,8 +43,6 @@ def weak_gen():
 
 
 def strong_gen():
-    global pwlist
-    pwlist = []
     gen_pass(8)
     random.shuffle(pwlist)
     pwstring = "".join(pwlist)
@@ -53,8 +50,8 @@ def strong_gen():
 
 
 def unix_pass_gen():
-    global pwlist
     pwlist = []
+    global pwlist
     gen_pass(8)
     gen_random(string.digits)
     gen_random(string.punctuation)
