@@ -11,7 +11,7 @@ def show_data(user_name, description):
             % (user_name, description))
     query_output = str(cursor.fetchone())
     password = ''.join(query_output.split())[2:-3]
-    return (password)
+    return password
     conn.close()
 
 
@@ -19,10 +19,10 @@ def select_user(user_name):
     conn = sqlite3.connect('meango.db')
     cursor = conn.cursor()
     cursor.execute("SELECT MASTER_PASS FROM SEC WHERE USER = '%s'"
-            % (user_name))
+            % user_name)
     query_output = str(cursor.fetchone())
     password = re.sub('[^A-Za-z0-9]+', '', query_output)
-    return (password)
+    return password
     conn.close()
 
 
@@ -73,7 +73,7 @@ def check_pass(user_name, user_passwd):
     conn = sqlite3.connect('meango.db')
     cursor = conn.cursor()
     cursor.execute("SELECT MASTER_PASS FROM SEC WHERE USER = '%s'" %
-                   (user_name))
+                   user_name)
     query_output = str(cursor.fetchone())
     db_pass = re.sub('[^A-Za-z0-9]+', '', query_output)
     conn.close()
